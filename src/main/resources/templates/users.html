@@ -11,9 +11,18 @@
 <body>
     <script>
         function rowClicked(id, name, age) {
-            document.getElementById("id").value = id;
-            document.getElementById("name").value = name;
-            document.getElementById("age").value = age;
+            document.formDelete.id.value = id;
+
+            document.formAdd.name.value = name;
+            document.formAdd.age.value = age;
+
+            document.formUpdate.id.value = id;
+            document.formUpdate.name.value = name;
+            document.formUpdate.age.value = age;
+        }
+        function updateUser() {
+            document.formUpdate.name.value = document.formAdd.name.value;
+            document.formUpdate.age.value = document.formAdd.age.value;
         }
     </script>
 
@@ -31,20 +40,27 @@
                 <td th:text="${user.age}">age_placeholder</td>
             </tr>
         </table>
-        <form action="#" th:object="${user}" method="post">
             <div class="grid-container">
                 <div>
-                    <input id="id" name="id" type="hidden" value="0"/>
-                    <input id="name" name="name" type="text" placeholder="user name" th:placeholder="#{users.name.placeholder}"/>
-                    <input id="age" name="age" type="number" placeholder="user age" th:placeholder="#{users.age.placeholder}"/>
+                    <form name="formAdd" action="/users/add" th:method="post" th:object="${user}">
+                    <input name="name" type="text" placeholder="user name" th:placeholder="#{users.name.placeholder}"/>
+                    <input name="age" type="number" placeholder="user age" th:placeholder="#{users.age.placeholder}"/>
+                    </form>
                 </div>
                 <div>
-                    <input type="submit" value="add user" th:value="#{users.button.add}" th:formaction="@{/users/add}"/>
-                    <input type="submit" value="update user" th:value="#{users.button.update}" th:formaction="@{/users/update}"/>
-                    <input class="delete" type="submit" value="delete user" th:value="#{users.button.delete}" th:formaction="@{/users/delete}"/>
+                    <input type="submit" value="add user" th:value="#{users.button.add}" onclick="document.formAdd.submit()"/>
+                    <form name="formUpdate" action="#" th:method="patch" th:object="${user}">
+                        <input name="id" type="hidden" value="0"/>
+                        <input name="name" type="hidden" value="0"/>
+                        <input name="age" type="hidden" value="0"/>
+                        <input type="submit" value="update user" th:value="#{users.button.update}" th:formaction="@{/users/update}" onclick="updateUser()"/>
+                    </form>
+                    <form name="formDelete" action="#" th:method="delete" th:object="${user}">
+                        <input name="id" type="hidden" value="0"/>
+                        <input class="delete" type="submit" value="delete user" th:value="#{users.button.delete}" th:formaction="@{/users/delete}"/>
+                    </form>
                 </div>
             </div>
-        </form>
     </div>
 </body>
 </html>
